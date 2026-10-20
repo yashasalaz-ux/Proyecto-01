@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Punto Suave · Prendas tejidas a mano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lana:#ECE8F2; --tarjeta:#F8F6FB; --tinta:#25244A; --suave:#5B5A7E;
+  --mostaza:#E0A62B; --linea:#D5D0E0; --hilo:#25244A;
+  --titulo:"Young Serif",Georgia,serif; --texto:"Figtree",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{background:var(--lana);color:var(--tinta);font-family:var(--texto);line-height:1.55;font-size:17px}
+a{color:inherit}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--mostaza);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* Cabecera */
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.logo{font-family:var(--titulo);font-size:1.5rem;text-decoration:none}
+.btn-carrito{background:var(--tinta);color:#fff;border:0;border-radius:999px;padding:10px 18px;font-weight:600}
+.btn-carrito span{background:var(--mostaza);color:var(--tinta);border-radius:999px;padding:1px 9px;margin-left:8px}
+
+/* Portada */
+.portada{padding:48px 0 28px}
+.portada h1{font-family:var(--titulo);font-weight:400;font-size:clamp(2.4rem,7vw,4.6rem);line-height:1.05;max-width:12em}
+.portada p{max-width:34em;margin-top:18px;color:var(--suave);font-size:1.1rem}
+.punto{height:60px;margin:34px 0 22px;background:var(--hilo);transition:background .35s;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='20'%3E%3Cpath d='M2 2 L8 14 L14 2' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 0 0/16px 20px repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='20'%3E%3Cpath d='M2 2 L8 14 L14 2' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 0 0/16px 20px repeat}
+.selector{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.selector strong{font-weight:600}
+.sw{width:38px;height:38px;border-radius:50%;border:3px solid var(--lana);box-shadow:0 0 0 1px var(--linea);padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--tinta)}
+#nombre-color{color:var(--suave)}
+
+/* Catálogo */
+.filtros{display:flex;flex-wrap:wrap;gap:8px;margin:36px 0 22px}
+.chip{border:1.5px solid var(--tinta);background:transparent;color:var(--tinta);border-radius:999px;padding:7px 16px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--tinta);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:22px;padding-bottom:30px}
+.prenda{background:var(--tarjeta);border-radius:18px 18px 6px 6px;overflow:hidden;display:flex;flex-direction:column}
+.prenda svg{width:100%;height:auto;display:block;background:var(--linea);padding:14px}
+.prenda .info{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.prenda h3{font-family:var(--titulo);font-weight:400;font-size:1.25rem}
+.prenda p{color:var(--suave);font-size:.95rem;flex:1}
+.fila{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.precio{font-weight:600;font-size:1.1rem}
+.agregar{background:var(--mostaza);border:0;border-radius:8px;padding:8px 14px;font-weight:600;color:var(--tinta)}
+.agregar:hover{filter:brightness(.95)}
+
+/* Información */
+.taller{border-top:1.5px solid var(--tinta);padding:40px 0;display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.taller h2{font-family:var(--titulo);font-weight:400;font-size:1.3rem;margin-bottom:6px}
+.taller p{color:var(--suave)}
+footer{padding:26px 0 40px;color:var(--suave);font-size:.95rem}
+
+/* Carrito */
+#fondo{position:fixed;inset:0;background:rgba(37,36,74,.45);opacity:0;pointer-events:none;transition:opacity .25s}
+#cajon{position:fixed;top:0;right:0;height:100%;width:min(400px,100%);background:var(--tarjeta);transform:translateX(100%);transition:transform .3s;display:flex;flex-direction:column;padding:22px}
+body.abierto #fondo{opacity:1;pointer-events:auto}
+body.abierto #cajon{transform:none}
+#cajon header{padding:0 0 14px;border-bottom:1px solid var(--linea)}
+#cajon h2{font-family:var(--titulo);font-weight:400}
+.cerrar{background:none;border:0;font-size:1.6rem;line-height:1}
+#lista{flex:1;overflow:auto;padding:10px 0}
+.item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--linea)}
+.item i{width:22px;height:22px;border-radius:50%;flex:none;box-shadow:0 0 0 1px var(--linea)}
+.item div{flex:1;font-size:.95rem}
+.item small{color:var(--suave);display:block}
+.cant{display:flex;align-items:center;gap:8px}
+.cant button{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--tinta);background:none;font-weight:600}
+.vacio{color:var(--suave);padding:20px 0}
+.total{display:flex;justify-content:space-between;font-weight:600;font-size:1.15rem;padding:14px 0}
+.pedir{background:var(--tinta);color:#fff;border:0;border-radius:10px;padding:14px;font-weight:600}
+.pedir:disabled{opacity:.4;cursor:not-allowed}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- Textura de punto para las prendas -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <pattern id="punto" width="6" height="8" patternUnits="userSpaceOnUse">
+    <path d="M1 1 L3 6 L5 1" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.2"/>
+  </pattern>
+</svg>
+
+<div class="wrap">
+  <header>
+    <a class="logo" href="#">Punto Suave</a>
+    <button class="btn-carrito" id="abrir" aria-label="Abrir carrito">Carrito<span id="contador">0</span></button>
+  </header>
+
+  <section class="portada">
+    <h1>Prendas tejidas a mano, punto por punto.</h1>
+    <p>Cada pieza se teje en pequeñas tandas con lana suave. Elige un color de hilo y mira cómo cambia todo el catálogo.</p>
+    <div class="punto" aria-hidden="true"></div>
+    <div class="selector" id="selector">
+      <strong>Color del hilo:</strong>
+      <span id="nombre-color"></span>
+    </div>
+  </section>
+
+  <section aria-label="Catálogo">
+    <div class="filtros" id="filtros"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="taller">
+    <div><h2>Tejido a mano</h2><p>Cada prenda pasa por las manos de una sola tejedora, de la primera vuelta al último remate.</p></div>
+    <div><h2>Lana suave</h2><p>Trabajamos con hilos que no pican y que se lavan bien, pensados para usar todos los días.</p></div>
+    <div><h2>Hecho por encargo</h2><p>¿Otra talla u otro color? Escríbenos al hacer tu pedido y lo tejemos para ti.</p></div>
+  </section>
+
+  <footer>© 2026 Punto Suave. Todas las prendas se tejen por encargo.</footer>
+</div>
+
+<div id="fondo"></div>
+<aside id="cajon" aria-label="Carrito de compras">
+  <header><h2>Tu carrito</h2><button class="cerrar" id="cerrar" aria-label="Cerrar carrito">×</button></header>
+  <div id="lista"></div>
+  <div class="total"><span>Total</span><span id="total">$0</span></div>
+  <button class="pedir" id="pedir">Enviar pedido por WhatsApp</button>
+</aside>
+
+<script>
+/* ====== CONFIGURACIÓN: edita aquí ====== */
+const NUMERO_WHATSAPP = "0000000000"; // tu número con código de país, sin + ni espacios
+const MONEDA = "$";
+
+const COLORES = [
+  {n:"Índigo", h:"#25244A"},
+  {n:"Mostaza", h:"#E0A62B"},
+  {n:"Musgo", h:"#55663F"},
+  {n:"Rosa", h:"#D98C9A"},
+  {n:"Avena", h:"#CFC4AE"}
+];
+
+const FORMAS = {
+  sueter:"<path d='M40 18 L52 14 Q60 24 68 14 L80 18 L108 46 L96 60 L84 50 L84 106 L36 106 L36 50 L24 60 L12 46 Z'/>",
+  cardigan:"<path d='M40 18 L52 14 L60 30 L68 14 L80 18 L108 46 L96 60 L84 50 L84 106 L36 106 L36 50 L24 60 L12 46 Z'/>",
+  bufanda:"<path d='M30 10 H58 V86 H30 Z'/><path d='M58 22 H90 V50 H58 Z'/><path d='M30 90 v14 M38 90 v14 M46 90 v14 M54 90 v14' stroke-width='3' stroke-linecap='round'/>",
+  gorro:"<path d='M24 76 Q24 30 60 30 Q96 30 96 76 Z'/><path d='M22 76 H98 V92 H22 Z'/><circle cx='60' cy='24' r='10'/>",
+  calcetines:"<path d='M44 10 H74 V62 L98 80 Q106 98 86 102 L52 102 Q40 102 40 88 Z'/>",
+  mitones:"<path d='M34 106 V52 Q34 20 58 20 Q82 20 82 52 V106 Z'/><ellipse cx='88' cy='66' rx='10' ry='16'/>"
+};
+
+const PRENDAS = [
+  {id:1, nombre:"Suéter de punto jersey", cat:"Abrigos", forma:"sueter", precio:85, desc:"Cuello redondo, cómodo y de ajuste holgado."},
+  {id:2, nombre:"Cárdigan con botones", cat:"Abrigos", forma:"cardigan", precio:98, desc:"Se abre al frente y se abriga como un suéter."},
+  {id:3, nombre:"Bufanda larga con flecos", cat:"Accesorios", forma:"bufanda", precio:32, desc:"Dos vueltas al cuello y aún sobra largo."},
+  {id:4, nombre:"Gorro con pompón", cat:"Accesorios", forma:"gorro", precio:24, desc:"Puño elástico que se ajusta sin apretar."},
+  {id:5, nombre:"Calcetines de lana", cat:"Accesorios", forma:"calcetines", precio:18, desc:"Gruesos y tibios para estar en casa."},
+  {id:6, nombre:"Mitones tejidos", cat:"Accesorios", forma:"mitones", precio:22, desc:"Abrigan la mano sin quitar libertad a los dedos."}
+];
+
+/* ====== ESTADO ====== */
+let color = COLORES[0];
+let categoria = "Todo";
+const carrito = {}; // clave: id|color
+
+const $ = s => document.querySelector(s);
+const dinero = n => MONEDA + n.toFixed(2).replace(/\.00$/, "");
+
+/* ====== COLOR DEL HILO ====== */
+function pintarSelector(){
+  const cont = $("#selector");
+  cont.querySelectorAll(".sw").forEach(e => e.remove());
+  const ref = $("#nombre-color");
+  COLORES.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "sw"; b.style.background = c.h; b.title = c.n;
+    b.setAttribute("aria-label", "Color " + c.n);
+    b.setAttribute("aria-pressed", c.n === color.n);
+    b.onclick = () => { color = c; pintarSelector(); pintarCatalogo(); };
+    cont.insertBefore(b, ref);
+  });
+  ref.textContent = color.n;
+  document.documentElement.style.setProperty("--hilo", color.h);
+}
+
+/* ====== CATÁLOGO ====== */
+function dibujo(p){
+  const f = FORMAS[p.forma];
+  return `<svg viewBox="0 0 120 120" role="img" aria-label="${p.nombre} en color ${color.n}">
+    <g fill="${color.h}" stroke="${color.h}" stroke-width="1" stroke-linejoin="round">${f}</g>
+    <g fill="url(#punto)" stroke="none">${f}</g>
+    ${p.forma==="cardigan" ? "<g fill='#fff' fill-opacity='.7'><circle cx='60' cy='52' r='2.5'/><circle cx='60' cy='70' r='2.5'/><circle cx='60' cy='88' r='2.5'/></g>" : ""}
+  </svg>`;
+}
+
+function pintarFiltros(){
+  const cats = ["Todo", ...new Set(PRENDAS.map(p => p.cat))];
+  $("#filtros").innerHTML = cats.map(c =>
+    `<button class="chip" aria-pressed="${c===categoria}" data-c="${c}">${c}</button>`).join("");
+  $("#filtros").querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    categoria = b.dataset.c; pintarFiltros(); pintarCatalogo();
+  });
+}
+
+function pintarCatalogo(){
+  const lista = PRENDAS.filter(p => categoria === "Todo" || p.cat === categoria);
+  $("#grid").innerHTML = lista.map(p => `
+    <article class="prenda">
+      ${dibujo(p)}
+      <div class="info">
+        <h3>${p.nombre}</h3>
+        <p>${p.desc}</p>
+        <div class="fila">
+          <span class="precio">${dinero(p.precio)}</span>
+          <button class="agregar" data-id="${p.id}">Agregar</button>
+        </div>
+      </div>
+    </article>`).join("");
+  $("#grid").querySelectorAll(".agregar").forEach(b => b.onclick = () => agregar(+b.dataset.id));
+}
+
+/* ====== CARRITO ====== */
+function agregar(id){
+  const k = id + "|" + color.n;
+  carrito[k] = (carrito[k] || 0) + 1;
+  pintarCarrito();
+}
+function cambiar(k, d){
+  carrito[k] += d;
+  if (carrito[k] <= 0) delete carrito[k];
+  pintarCarrito();
+}
+function pintarCarrito(){
+  const claves = Object.keys(carrito);
+  let total = 0, piezas = 0;
+  $("#lista").innerHTML = claves.length ? claves.map(k => {
+    const [id, cn] = k.split("|");
+    const p = PRENDAS.find(x => x.id == id);
+    const c = COLORES.find(x => x.n === cn);
+    total += p.precio * carrito[k]; piezas += carrito[k];
+    return `<div class="item">
+      <i style="background:${c.h}"></i>
+      <div>${p.nombre}<small>${cn} · ${dinero(p.precio)}</small></div>
+      <div class="cant">
+        <button data-k="${k}" data-d="-1" aria-label="Quitar uno">−</button>
+        <span>${carrito[k]}</span>
+        <button data-k="${k}" data-d="1" aria-label="Agregar uno">+</button>
+      </div></div>`;
+  }).join("") : `<p class="vacio">Tu carrito está vacío. Agrega una prenda del catálogo.</p>`;
+  $("#lista").querySelectorAll(".cant button").forEach(b => b.onclick = () => cambiar(b.dataset.k, +b.dataset.d));
+  $("#total").textContent = dinero(total);
+  $("#contador").textContent = piezas;
+  $("#pedir").disabled = !claves.length;
+}
+
+function abrir(v){ document.body.classList.toggle("abierto", v); }
+$("#abrir").onclick = () => abrir(true);
+$("#cerrar").onclick = () => abrir(false);
+$("#fondo").onclick = () => abrir(false);
+document.addEventListener("keydown", e => { if (e.key === "Escape") abrir(false); });
+
+$("#pedir").onclick = () => {
+  let total = 0;
+  const lineas = Object.keys(carrito).map(k => {
+    const [id, cn] = k.split("|");
+    const p = PRENDAS.find(x => x.id == id);
+    total += p.precio * carrito[k];
+    return `• ${carrito[k]} x ${p.nombre} (${cn}) - ${dinero(p.precio * carrito[k])}`;
+  });
+  const msg = `Hola, quiero hacer este pedido:\n${lineas.join("\n")}\nTotal: ${dinero(total)}`;
+  window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+};
+
+/* ====== INICIO ====== */
+pintarSelector(); pintarFiltros(); pintarCatalogo(); pintarCarrito();
+</script>
+</body>
+</html>
